@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 require('dotenv').config();
 
-mongoose.connect('mongodb+srv://calalty:Ozzie123@cluster0-hhvk7.mongodb.net/users?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://calalty:Ozzie123@cluster0-hhvk7.mongodb.net/list?retryWrites=true&w=majority', 
 {useNewUrlParser: true, useUnifiedTopology: true});
 
 const app = express()
@@ -23,15 +23,17 @@ app.set('view engine', '.hbs')
 
 const ListItem = require('./models/userModel')
 
+app.get('/', async(req, res) => {
+    res.render('index')
+})
+
 app.post('/', async(req, res) => {
     const list = new ListItem({list: req.body.list})
     const listItem = req.body.list
 
     await list.save().then(() => {
-        for (i = 0; i < listItem.length; i++) {
         res.render('index', {listItem})
-        return
-    }}).catch((error) => {
+    }).catch((error) => {
         res.render('index', {err: `${listItem} already on list`})
     })
 })
